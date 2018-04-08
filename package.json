@@ -1,5 +1,5 @@
 {
-  "name": "symfony-collection",
+  "name": "@a2lix/symfony-collection",
   "version": "0.1.0",
   "description": "Manage your Symfony collection simply with vanilla JS",
   "main": "a2lix_sf_collection.js",

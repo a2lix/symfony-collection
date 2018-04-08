@@ -1,0 +1,18 @@
+{
+  "name": "symfony-collection",
+  "version": "0.1.0",
+  "description": "Manage your Symfony collection simply with vanilla JS",
+  "main": "a2lix_sf_collection.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/a2lix/symfony-collection.git"
+  },
+  "keywords": ["symfony", "form", "collection", "a2lix", "vanillaJS"],
+  "author": "David ALLIX <http://a2lix.fr>",
+  "homepage": "https://github.com/a2lix/symfony-collection",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "prettier": "1.11.1"
+  }
+}

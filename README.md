@@ -1,4 +1,4 @@
-# A2lix JS - symfony-collection
+# A2LiX JS - symfony-collection
 
 Manage your Symfony collection simply with vanilla JS
 

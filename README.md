@@ -2,6 +2,8 @@
 
 Manage your Symfony Form collection simply with vanilla JS
 
+[![npm version](https://badge.fury.io/js/%40a2lix%2Fsymfony-collection.svg)](https://badge.fury.io/js/%40a2lix%2Fsymfony-collection)
+
 
 ## Install
 

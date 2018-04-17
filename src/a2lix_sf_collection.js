@@ -2,15 +2,17 @@
 
 const a2lix_lib = {}
 
-a2lix_lib.formCollection = (() => {
-  const init = (
-    collectionsSelector = 'form div[data-prototype]',
-    manageRemoveEntry = true
-  ) => {
+a2lix_lib.sfCollection = (() => {
+  const init = (config = {}) => {
     if (!('content' in document.createElement('template'))) {
       console.error('HTML template will not working...')
       return
     }
+
+    const {
+      collectionsSelector = 'form div[data-prototype]',
+      manageRemoveEntry = true
+    } = config
 
     const collectionsElt = document.querySelectorAll(collectionsSelector)
     if (!collectionsElt.length) {
@@ -22,7 +24,7 @@ a2lix_lib.formCollection = (() => {
     })
   }
 
-  const processCollectionElt = (collectionElt, manageRemoveEntry) => {
+  const processCollectionElt = (collectionElt, manageRemoveEntry = false) => {
     collectionElt.setAttribute(
       'data-entry-index',
       collectionElt.children.length
@@ -57,7 +59,8 @@ a2lix_lib.formCollection = (() => {
       'remove',
       'btn btn-danger btn-sm'
     )
-    ;[...collectionElt.children]
+
+    const collectionChildren = [...collectionElt.children]
       .filter(entryElt => !entryElt.hasAttribute('data-entry-action'))
       .forEach(entryElt => {
         entryElt.appendChild(entryRemoveLink.cloneNode(true))

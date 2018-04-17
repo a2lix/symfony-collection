@@ -15,7 +15,7 @@
     "vanillaJS"
   ],
   "author": "David ALLIX <https://a2lix.fr>",
-  "homepage": "<https://a2lix.fr>",
+  "homepage": "https://a2lix.fr",
   "license": "MIT",
   "private": false,
   "scripts": {

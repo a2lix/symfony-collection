@@ -3,28 +3,52 @@
 Manage your Symfony Form collection simply with vanilla JS
 
 
-## How to
-
-After loading a2lix_sf_collection.js file
+## Install
 
 ```
-a2lix_lib.formCollection.init(SELECTOR = "form div[data-prototype]", manageRemoveEntry = true)
+yarn install @a2lix/symfony-collection     or     npm install @a2lix/symfony-collection
+```
+
+
+## How to
+
+After loading the dist version of **a2lix_sf_collection.min.js** file, init a2lix_lib.sfCollection, optionnaly with custom configuration.
+
+Default configuration:
+
+```
+a2lix_lib.sfCollection.init({
+    collectionsSelector: 'form div[data-prototype]',
+    manageRemoveEntry: true
+})
 ```
 
 
 ## Example
 
 ```
-<script src="__PATH_TO__a2lix_sf_collection.js"></script>
+<script src="__PATH_TO__a2lix_sf_collection.min.js"></script>
 
 <script>
 // A global initialization on all Symfony Form collection with manageRemoveEntry feature enable
-a2lix_lib.formCollection.init()
+a2lix_lib.sfCollection.init()
 
 
 // OR a custom initialization with restricted scope of Symfony Form collection with manageRemoveEntry feature disable
-a2lix_lib.formCollection.init('form div[data-a2lix-collection]', false)
+a2lix_lib.sfCollection.init({
+    collectionsSelector: 'form div[data-a2lix-collection]',
+    manageRemoveEntry: false
+})
 </script>
+```
+
+
+## Contribute help
+
+```
+docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/src/app -w /usr/src/app node:alpine npm install
+docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/src/app -w /usr/src/app node:alpine npm run build
+
 ```
 
 

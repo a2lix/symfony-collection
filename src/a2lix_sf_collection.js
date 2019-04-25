@@ -137,4 +137,6 @@ a2lix_lib.sfCollection = (() => {
   return {
     init
   }
-})()
+})();
+
+export default a2lix_lib;

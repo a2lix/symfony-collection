@@ -8,7 +8,7 @@ Manage your Symfony Form collection simply with vanilla JS
 ## Install
 
 ```
-yarn install @a2lix/symfony-collection     or     npm install @a2lix/symfony-collection
+yarn add @a2lix/symfony-collection     or     npm install @a2lix/symfony-collection
 ```
 
 

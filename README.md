@@ -7,14 +7,26 @@ Manage your Symfony Form collection simply with vanilla JS
 
 ## Install
 
+As first thing you need to pull the package using yarn or npm
+
 ```
-yarn install @a2lix/symfony-collection     or     npm install @a2lix/symfony-collection
+yarn add @a2lix/symfony-collection
+```
+or
+```
+npm install @a2lix/symfony-collection
 ```
 
+Then you can either import it in your files using ES6
+```
+import a2lix_lib from '@a2lix/symfony-collection/src/a2lix_sf_collection';
+```
+
+or symlink/copy/move it in a folder and reference it directly in a `script` tag
 
 ## How to
 
-After loading the dist version of **a2lix_sf_collection.min.js** file, init a2lix_lib.sfCollection, optionnaly with custom configuration.
+After you loaded the dist version of **a2lix_sf_collection.min.js** file or imported through ES6 method, init a2lix_lib.sfCollection, optionnaly with custom configuration.
 
 Default configuration:
 

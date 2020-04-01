@@ -66,10 +66,10 @@ a2lix_lib.sfCollection = (() => {
 
   const appendEntryRemoveLink = (collectionElt, lang) => {
     const entryLabel =
-      collectionElt.getAttribute('data-entry-remove-label') || ''
-    const entryLabelClass =
-      collectionElt.getAttribute('data-entry-remove-class') ||
-      'btn btn-danger btn-sm'
+        collectionElt.getAttribute('data-entry-remove-label') || '',
+      entryLabelClass =
+        collectionElt.getAttribute('data-entry-remove-class') ||
+        'btn btn-danger btn-sm'
 
     const entryRemoveLink = getButtonElt(
       `${lang.remove} ${entryLabel}`,
@@ -106,12 +106,6 @@ a2lix_lib.sfCollection = (() => {
 
     const entryPrototype = collectionElt.getAttribute('data-prototype'),
       templateContent = getTemplateContent(entryPrototype, entryIndex)
-
-    const entryLabel =
-        collectionElt.getAttribute('data-entry-remove-label') || '',
-      entryLabelClass =
-        collectionElt.getAttribute('data-entry-remove-class') ||
-        'btn btn-danger btn-sm'
 
     // Add remove button, if necessary, before insert to the DOM
     if (manageRemoveEntry) {

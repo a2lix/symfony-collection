@@ -11,7 +11,11 @@ a2lix_lib.sfCollection = (() => {
 
     const {
       collectionsSelector = 'form div[data-prototype]',
-      manageRemoveEntry = true
+      manageRemoveEntry = true,
+      lang = {
+        add: 'Add',
+        remove: 'Remove'
+      }
     } = config
 
     const collectionsElt = document.querySelectorAll(collectionsSelector)
@@ -20,44 +24,57 @@ a2lix_lib.sfCollection = (() => {
     }
 
     collectionsElt.forEach(collectionElt => {
-      processCollectionElt(collectionElt, manageRemoveEntry)
+      processCollectionElt(collectionElt, manageRemoveEntry, lang)
     })
   }
 
-  const processCollectionElt = (collectionElt, manageRemoveEntry = false) => {
+  const processCollectionElt = (
+    collectionElt,
+    manageRemoveEntry = false,
+    lang
+  ) => {
     collectionElt.setAttribute(
       'data-entry-index',
       collectionElt.children.length
     )
 
-    appendEntryAddLink(collectionElt)
+    appendEntryAddLink(collectionElt, lang)
 
     if (manageRemoveEntry) {
-      appendEntryRemoveLink(collectionElt)
+      appendEntryRemoveLink(collectionElt, lang)
     }
 
     collectionElt.addEventListener('click', evt =>
-      configureCollectionElt(evt, manageRemoveEntry)
+      configureCollectionElt(evt, manageRemoveEntry, lang)
     )
   }
 
-  const appendEntryAddLink = collectionElt => {
+  const appendEntryAddLink = (collectionElt, lang) => {
     // Allow custom label
-    const entryLabel = collectionElt.getAttribute('data-entry-label') || ''
+    const entryLabel = collectionElt.getAttribute('data-entry-add-label') || '',
+      entryLabelClass =
+        collectionElt.getAttribute('data-entry-add-class') ||
+        'btn btn-primary btn-sm mt-2'
 
     const entryAddLink = getButtonElt(
-      `Add ${entryLabel}`,
+      `${lang.add} ${entryLabel}`,
       'add',
-      'btn btn-primary btn-sm mt-2'
+      `${entryLabelClass}`
     )
     collectionElt.appendChild(entryAddLink)
   }
 
-  const appendEntryRemoveLink = collectionElt => {
+  const appendEntryRemoveLink = (collectionElt, lang) => {
+    const entryLabel =
+        collectionElt.getAttribute('data-entry-remove-label') || '',
+      entryLabelClass =
+        collectionElt.getAttribute('data-entry-remove-class') ||
+        'btn btn-danger btn-sm'
+
     const entryRemoveLink = getButtonElt(
-      'Remove',
+      `${lang.remove} ${entryLabel}`,
       'remove',
-      'btn btn-danger btn-sm'
+      `${entryLabelClass}`
     )
 
     const collectionChildren = [...collectionElt.children]
@@ -67,14 +84,14 @@ a2lix_lib.sfCollection = (() => {
       })
   }
 
-  const configureCollectionElt = (evt, manageRemoveEntry) => {
+  const configureCollectionElt = (evt, manageRemoveEntry, lang) => {
     if (!evt.target.hasAttribute('data-entry-action')) {
       return
     }
 
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':
-        addEntry(evt.currentTarget, evt.target, manageRemoveEntry)
+        addEntry(evt.currentTarget, evt.target, manageRemoveEntry, lang)
         break
       case 'remove':
         removeEntry(evt.currentTarget, evt.target)
@@ -82,7 +99,7 @@ a2lix_lib.sfCollection = (() => {
     }
   }
 
-  const addEntry = (collectionElt, entryAddButton, manageRemoveEntry) => {
+  const addEntry = (collectionElt, entryAddButton, manageRemoveEntry, lang) => {
     // Get & update entryIndex
     const entryIndex = collectionElt.getAttribute('data-entry-index')
     collectionElt.setAttribute('data-entry-index', +entryIndex + 1)
@@ -92,11 +109,16 @@ a2lix_lib.sfCollection = (() => {
 
     // Add remove button, if necessary, before insert to the DOM
     if (manageRemoveEntry) {
-      const entryRemoveLink = getButtonElt(
-        'Remove',
-        'remove',
-        'btn btn-danger btn-sm'
-      )
+      const entryLabel =
+          collectionElt.getAttribute('data-entry-remove-label') || '',
+        entryLabelClass =
+          collectionElt.getAttribute('data-entry-remove-class') ||
+          'btn btn-danger btn-sm',
+        entryRemoveLink = getButtonElt(
+          `${lang.remove} ${entryLabel}`,
+          'remove',
+          `${entryLabelClass}`
+        )
       templateContent.firstChild.appendChild(entryRemoveLink)
     }
 
@@ -137,6 +159,6 @@ a2lix_lib.sfCollection = (() => {
   return {
     init
   }
-})();
+})()
 
-export default a2lix_lib;
+export default a2lix_lib

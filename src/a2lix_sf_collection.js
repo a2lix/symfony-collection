@@ -3,13 +3,18 @@
 const a2lix_lib = {}
 
 a2lix_lib.sfCollection = (() => {
+  let masterConfig
+
   const init = (config = {}) => {
     if (!('content' in document.createElement('template'))) {
       console.error('HTML template will not working...')
       return
     }
 
+    masterConfig = masterConfig || config
+
     const {
+      parentElt = null,
       collectionsSelector = 'form div[data-prototype]',
       manageRemoveEntry = true,
       lang = {
@@ -18,7 +23,9 @@ a2lix_lib.sfCollection = (() => {
       }
     } = config
 
-    const collectionsElt = document.querySelectorAll(collectionsSelector)
+    const collectionsElt = parentElt
+      ? parentElt.querySelectorAll(collectionsSelector)
+      : document.querySelectorAll(collectionsSelector)
     if (!collectionsElt.length) {
       return
     }
@@ -89,6 +96,8 @@ a2lix_lib.sfCollection = (() => {
       return
     }
 
+    evt.stopPropagation()
+
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':
         addEntry(evt.currentTarget, evt.target, manageRemoveEntry, lang)
@@ -122,7 +131,11 @@ a2lix_lib.sfCollection = (() => {
       templateContent.firstChild.appendChild(entryRemoveLink)
     }
 
+    const newCollectionElt = templateContent.firstChild
+
     entryAddButton.parentElement.insertBefore(templateContent, entryAddButton)
+
+    init({ ...masterConfig, parentElt: newCollectionElt })
   }
 
   const removeEntry = (collectionElt, entryRemoveButton) => {

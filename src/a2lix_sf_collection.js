@@ -126,7 +126,7 @@ a2lix_lib.sfCollection = (() => {
   }
 
   const removeEntry = (collectionElt, entryRemoveButton) => {
-    entryRemoveButton.parentElement.remove()
+    getEntryElt(collectionElt, entryRemoveButton).remove()
   }
 
   /**
@@ -154,6 +154,14 @@ a2lix_lib.sfCollection = (() => {
     template.innerHTML = entryHtml.trim()
 
     return template.content
+  }
+
+  const getEntryElt = (collection, elem) => {
+    let entryParent = elem.parentNode
+    if (!Array.from(collection.childNodes).includes(entryParent)) {
+      return getEntryElt(collection, entryParent)
+    }
+    return entryParent
   }
 
   return {

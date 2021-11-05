@@ -1,9 +1,8 @@
 # A2LiX JS - symfony-collection
 
-Manage your Symfony Form collection simply with vanilla JS
+Manage your Symfony Form collection simply with vanilla JS WITH CHILDREN COLLECTION (THANKS https://github.com/dop3/symfony-collection/commits?author=dop3)
 
 [![npm version](https://badge.fury.io/js/%40a2lix%2Fsymfony-collection.svg)](https://badge.fury.io/js/%40a2lix%2Fsymfony-collection)
-
 
 ## Install
 
@@ -12,12 +11,15 @@ As first thing you need to pull the package using yarn or npm
 ```
 yarn add @a2lix/symfony-collection
 ```
+
 or
+
 ```
 npm install @a2lix/symfony-collection
 ```
 
 Then you can either import it in your files using ES6
+
 ```
 import a2lix_lib from '@a2lix/symfony-collection/src/a2lix_sf_collection';
 ```
@@ -41,7 +43,6 @@ a2lix_lib.sfCollection.init({
 })
 ```
 
-
 ## Example
 
 ```
@@ -60,7 +61,6 @@ a2lix_lib.sfCollection.init({
 </script>
 ```
 
-
 ## Contribute help
 
 ```
@@ -68,7 +68,6 @@ docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/
 docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/src/app -w /usr/src/app node:alpine npm run build
 
 ```
-
 
 # Demo
 

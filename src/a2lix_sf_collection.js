@@ -3,27 +3,34 @@
 const a2lix_lib = {}
 
 a2lix_lib.sfCollection = (() => {
+  let masterConfig
+
   const init = (config = {}) => {
     if (!('content' in document.createElement('template'))) {
       console.error('HTML template will not working...')
       return
     }
 
+    masterConfig = masterConfig || config
+
     const {
+      parentElt = null,
       collectionsSelector = 'form div[data-prototype]',
       manageRemoveEntry = true,
       lang = {
         add: 'Add',
-        remove: 'Remove'
-      }
+        remove: 'Remove',
+      },
     } = config
 
-    const collectionsElt = document.querySelectorAll(collectionsSelector)
+    const collectionsElt = parentElt
+      ? parentElt.querySelectorAll(collectionsSelector)
+      : document.querySelectorAll(collectionsSelector)
     if (!collectionsElt.length) {
       return
     }
 
-    collectionsElt.forEach(collectionElt => {
+    collectionsElt.forEach((collectionElt) => {
       processCollectionElt(collectionElt, manageRemoveEntry, lang)
     })
   }
@@ -44,7 +51,7 @@ a2lix_lib.sfCollection = (() => {
       appendEntryRemoveLink(collectionElt, lang)
     }
 
-    collectionElt.addEventListener('click', evt =>
+    collectionElt.addEventListener('click', (evt) =>
       configureCollectionElt(evt, manageRemoveEntry, lang)
     )
   }
@@ -78,8 +85,8 @@ a2lix_lib.sfCollection = (() => {
     )
 
     const collectionChildren = [...collectionElt.children]
-      .filter(entryElt => !entryElt.hasAttribute('data-entry-action'))
-      .forEach(entryElt => {
+      .filter((entryElt) => !entryElt.hasAttribute('data-entry-action'))
+      .forEach((entryElt) => {
         entryElt.appendChild(entryRemoveLink.cloneNode(true))
       })
   }
@@ -88,6 +95,8 @@ a2lix_lib.sfCollection = (() => {
     if (!evt.target.hasAttribute('data-entry-action')) {
       return
     }
+
+    evt.stopPropagation()
 
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':
@@ -122,7 +131,11 @@ a2lix_lib.sfCollection = (() => {
       templateContent.firstChild.appendChild(entryRemoveLink)
     }
 
+    const newCollectionElt = templateContent.firstChild
+
     entryAddButton.parentElement.insertBefore(templateContent, entryAddButton)
+
+    init({ ...masterConfig, parentElt: newCollectionElt })
   }
 
   const removeEntry = (collectionElt, entryRemoveButton) => {
@@ -157,7 +170,7 @@ a2lix_lib.sfCollection = (() => {
   }
 
   return {
-    init
+    init,
   }
 })()
 

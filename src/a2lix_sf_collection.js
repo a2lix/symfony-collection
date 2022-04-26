@@ -15,7 +15,9 @@ a2lix_lib.sfCollection = (() => {
       lang = {
         add: 'Add',
         remove: 'Remove'
-      }
+      },
+      afterAdd = null,
+      afterRemove = null
     } = config
 
     const collectionsElt = document.querySelectorAll(collectionsSelector)
@@ -24,14 +26,22 @@ a2lix_lib.sfCollection = (() => {
     }
 
     collectionsElt.forEach(collectionElt => {
-      processCollectionElt(collectionElt, manageRemoveEntry, lang)
+      processCollectionElt(
+        collectionElt,
+        manageRemoveEntry,
+        lang,
+        afterAdd,
+        afterRemove
+      )
     })
   }
 
   const processCollectionElt = (
     collectionElt,
     manageRemoveEntry = false,
-    lang
+    lang,
+    afterAdd,
+    afterRemove
   ) => {
     collectionElt.setAttribute(
       'data-entry-index',
@@ -45,7 +55,13 @@ a2lix_lib.sfCollection = (() => {
     }
 
     collectionElt.addEventListener('click', evt =>
-      configureCollectionElt(evt, manageRemoveEntry, lang)
+      configureCollectionElt(
+        evt,
+        manageRemoveEntry,
+        lang,
+        afterAdd,
+        afterRemove
+      )
     )
   }
 
@@ -84,22 +100,40 @@ a2lix_lib.sfCollection = (() => {
       })
   }
 
-  const configureCollectionElt = (evt, manageRemoveEntry, lang) => {
+  const configureCollectionElt = (
+    evt,
+    manageRemoveEntry,
+    lang,
+    afterAdd,
+    afterRemove
+  ) => {
     if (!evt.target.hasAttribute('data-entry-action')) {
       return
     }
 
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':
-        addEntry(evt.currentTarget, evt.target, manageRemoveEntry, lang)
+        addEntry(
+          evt.currentTarget,
+          evt.target,
+          manageRemoveEntry,
+          lang,
+          afterAdd
+        )
         break
       case 'remove':
-        removeEntry(evt.currentTarget, evt.target)
+        removeEntry(evt.currentTarget, evt.target, afterRemove)
         break
     }
   }
 
-  const addEntry = (collectionElt, entryAddButton, manageRemoveEntry, lang) => {
+  const addEntry = (
+    collectionElt,
+    entryAddButton,
+    manageRemoveEntry,
+    lang,
+    afterAdd
+  ) => {
     // Get & update entryIndex
     const entryIndex = collectionElt.getAttribute('data-entry-index')
     collectionElt.setAttribute('data-entry-index', +entryIndex + 1)
@@ -122,11 +156,16 @@ a2lix_lib.sfCollection = (() => {
       templateContent.firstChild.appendChild(entryRemoveLink)
     }
 
+    if (afterAdd !== null) afterAdd(collectionElt, templateContent.firstChild)
+
     entryAddButton.parentElement.insertBefore(templateContent, entryAddButton)
   }
 
-  const removeEntry = (collectionElt, entryRemoveButton) => {
+  const removeEntry = (collectionElt, entryRemoveButton, afterRemove) => {
     entryRemoveButton.parentElement.remove()
+
+    if (afterRemove !== null)
+      afterRemove(collectionElt, entryRemoveButton.parentElement)
   }
 
   /**

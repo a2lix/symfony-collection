@@ -13,8 +13,8 @@ a2lix_lib.sfCollection = (() => {
         class: 'btn btn-primary btn-sm mt-2',
         label: 'Add',
         customFn: null,
-        onBeforeAddFn: null,
-        onAfterAddFn: null
+        onBeforeFn: null,
+        onAfterFn: null
       },
       remove: {
         prototype:
@@ -22,7 +22,7 @@ a2lix_lib.sfCollection = (() => {
         class: 'btn btn-danger btn-sm',
         label: 'Remove',
         customFn: null,
-        onAfterRemoveFn: null
+        onAfterFn: null
       }
     }
   }
@@ -166,25 +166,17 @@ a2lix_lib.sfCollection = (() => {
   }
 
   const addEntry = (collectionElt, entryAddElt, templateContentEntry, cfg) => {
-    cfg.entry.add.onBeforeAddFn?.(
-      collectionElt,
-      entryAddElt,
-      templateContentEntry
-    )
+    cfg.entry.add.onBeforeFn?.(collectionElt, entryAddElt, templateContentEntry)
 
     entryAddElt.parentElement.insertBefore(templateContentEntry, entryAddElt)
 
-    cfg.entry.add.onAfterAddFn?.(
-      collectionElt,
-      entryAddElt,
-      templateContentEntry
-    )
+    cfg.entry.add.onAfterFn?.(collectionElt, entryAddElt, templateContentEntry)
   }
 
   const removeEntry = (collectionElt, entryRemoveElt, cfg) => {
     entryRemoveElt.parentElement.remove()
 
-    cfg.entry.remove.onAfterRemoveFn?.(collectionElt, entryRemoveElt)
+    cfg.entry.remove.onAfterFn?.(collectionElt, entryRemoveElt)
   }
 
   /**

@@ -41,8 +41,8 @@ a2lix_lib.sfCollection.init({
       class: 'btn btn-primary btn-sm mt-2',
       label: 'Add',
       customFn: null,
-      onBeforeAddFn: null,
-      onAfterAddFn: null
+      onBeforeFn: null,
+      onAfterFn: null
     },
     remove: {
       prototype:
@@ -50,7 +50,7 @@ a2lix_lib.sfCollection.init({
       class: 'btn btn-danger btn-sm',
       label: 'Remove',
       customFn: null,
-      onAfterRemoveFn: null
+      onAfterFn: null
     }
   }
 })
@@ -80,13 +80,13 @@ a2lix_lib.sfCollection.init({
         add: {
             label: 'Ajouter',
             // customFn: (...args) => console.log('add', args),
-            // onBeforeAddFn: (...args) => console.log('add', args),
-            // onAfterAddFn: (...args) => console.log('add', args),
+            // onBeforeFn: (...args) => console.log('add', args),
+            // onAfterFn: (...args) => console.log('add', args),
         },
         remove: {
             label: 'Supprimer',
             // customFn: (...args) => console.log('remove', args),
-            // onAfterRemoveFn: (...args) => console.log('remove', args),
+            // onAfterFn: (...args) => console.log('remove', args),
         }
     }
 })

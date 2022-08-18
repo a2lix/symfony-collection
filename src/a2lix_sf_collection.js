@@ -3,155 +3,190 @@
 const a2lix_lib = {}
 
 a2lix_lib.sfCollection = (() => {
-  const init = (config = {}) => {
+  const CONFIG_DEFAULT = {
+    collectionsSelector: 'form div[data-prototype]',
+    manageRemoveEntry: true,
+    entry: {
+      add: {
+        prototype:
+          '<button class="__class__" data-entry-action="add">__label__</button>',
+        class: 'btn btn-primary btn-sm mt-2',
+        label: 'Add',
+        customFn: null,
+        onBeforeInsertFn: null
+      },
+      remove: {
+        prototype:
+          '<button class="__class__" data-entry-action="remove">__label__</button>',
+        class: 'btn btn-danger btn-sm',
+        label: 'Remove',
+        customFn: null,
+        onAfterRemoveFn: null
+      }
+    }
+  }
+
+  const init = (config = CONFIG_DEFAULT) => {
     if (!('content' in document.createElement('template'))) {
       console.error('HTML template will not working...')
       return
     }
 
-    const {
-      collectionsSelector = 'form div[data-prototype]',
-      manageRemoveEntry = true,
-      lang = {
-        add: 'Add',
-        remove: 'Remove'
+    const cfg = {
+      ...CONFIG_DEFAULT,
+      ...config,
+      entry: {
+        add: { ...CONFIG_DEFAULT.entry.add, ...(config.entry.add || {}) },
+        remove: {
+          ...CONFIG_DEFAULT.entry.remove,
+          ...(config.entry.remove || {})
+        }
       }
-    } = config
+    }
 
-    const collectionsElt = document.querySelectorAll(collectionsSelector)
-    if (!collectionsElt.length) {
+    const collectionElts = document.querySelectorAll(cfg.collectionsSelector)
+    if (!collectionElts.length) {
       return
     }
 
-    collectionsElt.forEach(collectionElt => {
-      processCollectionElt(collectionElt, manageRemoveEntry, lang)
+    collectionElts.forEach(collectionElt => {
+      proceedCollectionElt(collectionElt, cfg)
     })
   }
 
-  const processCollectionElt = (
-    collectionElt,
-    manageRemoveEntry = false,
-    lang
-  ) => {
+  const proceedCollectionElt = (collectionElt, cfg) => {
     collectionElt.setAttribute(
       'data-entry-index',
       collectionElt.children.length
     )
 
-    appendEntryAddLink(collectionElt, lang)
+    appendEntryAddElt(collectionElt, cfg.entry.add)
 
-    if (manageRemoveEntry) {
-      appendEntryRemoveLink(collectionElt, lang)
+    if (cfg.manageRemoveEntry) {
+      appendEntryRemoveElts(collectionElt, cfg.entry.remove)
     }
 
-    collectionElt.addEventListener('click', evt =>
-      configureCollectionElt(evt, manageRemoveEntry, lang)
-    )
+    collectionElt.addEventListener('click', evt => triggerEntryAction(evt, cfg))
   }
 
-  const appendEntryAddLink = (collectionElt, lang) => {
-    // Allow custom label
-    const entryLabel = collectionElt.getAttribute('data-entry-add-label') || '',
-      entryLabelClass =
-        collectionElt.getAttribute('data-entry-add-class') ||
-        'btn btn-primary btn-sm mt-2'
+  const appendEntryAddElt = (collectionElt, entryAddCfg) => {
+    const entryAddClass =
+      collectionElt.getAttribute('data-entry-add-class') || entryAddCfg.class
+    const entryAddLabel =
+      collectionElt.getAttribute('data-entry-add-label') || entryAddCfg.label
 
-    const entryAddLink = getButtonElt(
-      `${lang.add} ${entryLabel}`,
-      'add',
-      `${entryLabelClass}`
-    )
-    collectionElt.appendChild(entryAddLink)
+    const entryAddHtml = entryAddCfg.prototype
+      .replace(/__class__/g, entryAddClass)
+      .replace(/__label__/g, entryAddLabel)
+
+    collectionElt.appendChild(createTemplateContent(entryAddHtml))
   }
 
-  const appendEntryRemoveLink = (collectionElt, lang) => {
-    const entryLabel =
-        collectionElt.getAttribute('data-entry-remove-label') || '',
-      entryLabelClass =
-        collectionElt.getAttribute('data-entry-remove-class') ||
-        'btn btn-danger btn-sm'
-
-    const entryRemoveLink = getButtonElt(
-      `${lang.remove} ${entryLabel}`,
-      'remove',
-      `${entryLabelClass}`
+  const appendEntryRemoveElts = (collectionElt, entryRemoveCfg) => {
+    const templateContentEntryRemove = getTemplateContentEntryRemove(
+      collectionElt,
+      entryRemoveCfg
     )
 
-    const collectionChildren = [...collectionElt.children]
+    Array.from(collectionElt.children)
       .filter(entryElt => !entryElt.hasAttribute('data-entry-action'))
       .forEach(entryElt => {
-        entryElt.appendChild(entryRemoveLink.cloneNode(true))
+        entryElt.appendChild(templateContentEntryRemove.cloneNode(true))
       })
   }
 
-  const configureCollectionElt = (evt, manageRemoveEntry, lang) => {
+  const getTemplateContentEntryRemove = (collectionElt, entryRemoveCfg) => {
+    const entryRemoveClass =
+      collectionElt.getAttribute('data-entry-remove-class') ||
+      entryRemoveCfg.class
+    const entryRemoveLabel =
+      collectionElt.getAttribute('data-entry-remove-label') ||
+      entryRemoveCfg.label
+
+    const entryRemoveHtml = entryRemoveCfg.prototype
+      .replace(/__class__/g, entryRemoveClass)
+      .replace(/__label__/g, entryRemoveLabel)
+
+    return createTemplateContent(entryRemoveHtml)
+  }
+
+  const triggerEntryAction = (evt, cfg) => {
+    evt.preventDefault()
+
     if (!evt.target.hasAttribute('data-entry-action')) {
       return
     }
 
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':
-        addEntry(evt.currentTarget, evt.target, manageRemoveEntry, lang)
+        const templateContentEntry = getTemplateContentEntry(
+          evt.currentTarget,
+          cfg
+        )
+        if (cfg.entry.add.customFn) {
+          cfg.entry.add.customFn(
+            evt.currentTarget,
+            evt.target,
+            templateContentEntry,
+            cfg
+          )
+        } else {
+          addEntry(evt.currentTarget, evt.target, templateContentEntry, cfg)
+        }
         break
       case 'remove':
-        removeEntry(evt.currentTarget, evt.target)
+        if (cfg.entry.remove.customFn) {
+          cfg.entry.remove.customFn(evt.currentTarget, evt.target, cfg)
+        } else {
+          removeEntry(evt.currentTarget, evt.target, cfg)
+        }
         break
     }
   }
 
-  const addEntry = (collectionElt, entryAddButton, manageRemoveEntry, lang) => {
-    // Get & update entryIndex
+  const getTemplateContentEntry = (collectionElt, cfg) => {
     const entryIndex = collectionElt.getAttribute('data-entry-index')
     collectionElt.setAttribute('data-entry-index', +entryIndex + 1)
 
-    const entryPrototype = collectionElt.getAttribute('data-prototype'),
-      templateContent = getTemplateContent(entryPrototype, entryIndex)
+    const entryHtml = collectionElt
+      .getAttribute('data-prototype')
+      .replace(/__name__label__/g, `!New! ${entryIndex}`)
+      .replace(/__name__/g, entryIndex)
 
-    // Add remove button, if necessary, before insert to the DOM
-    if (manageRemoveEntry) {
-      const entryLabel =
-          collectionElt.getAttribute('data-entry-remove-label') || '',
-        entryLabelClass =
-          collectionElt.getAttribute('data-entry-remove-class') ||
-          'btn btn-danger btn-sm',
-        entryRemoveLink = getButtonElt(
-          `${lang.remove} ${entryLabel}`,
-          'remove',
-          `${entryLabelClass}`
-        )
-      templateContent.firstChild.appendChild(entryRemoveLink)
+    const templateContentEntry = createTemplateContent(entryHtml)
+
+    if (cfg.manageRemoveEntry) {
+      templateContentEntry.firstChild.appendChild(
+        getTemplateContentEntryRemove(collectionElt, cfg.entry.remove)
+      )
     }
 
-    entryAddButton.parentElement.insertBefore(templateContent, entryAddButton)
+    return templateContentEntry
   }
 
-  const removeEntry = (collectionElt, entryRemoveButton) => {
-    entryRemoveButton.parentElement.remove()
+  const addEntry = (collectionElt, entryAddElt, templateContentEntry, cfg) => {
+    cfg.entry.add.onBeforeInsertFn?.(
+      collectionElt,
+      entryAddElt,
+      templateContentEntry
+    )
+
+    entryAddElt.parentElement.insertBefore(templateContentEntry, entryAddElt)
+  }
+
+  const removeEntry = (collectionElt, entryRemoveElt, cfg) => {
+    entryRemoveElt.parentElement.remove()
+
+    cfg.entry.remove.onAfterRemoveFn?.(collectionElt, entryRemoveElt)
   }
 
   /**
    * HELPERS
    */
 
-  const getButtonElt = (label, action, className = 'btn') => {
-    const button = document.createElement('button')
-
-    button.type = 'button'
-    button.textContent = label
-    button.className = className
-    button.dataset.entryAction = action
-
-    return button
-  }
-
-  const getTemplateContent = (entryPrototype, entryIndex) => {
+  const createTemplateContent = html => {
     const template = document.createElement('template')
-
-    const entryHtml = entryPrototype
-      .replace(/__name__label__/g, `!New! ${entryIndex}`)
-      .replace(/__name__/g, entryIndex)
-
-    template.innerHTML = entryHtml.trim()
+    template.innerHTML = html.trim()
 
     return template.content
   }

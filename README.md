@@ -41,7 +41,8 @@ a2lix_lib.sfCollection.init({
       class: 'btn btn-primary btn-sm mt-2',
       label: 'Add',
       customFn: null,
-      onBeforeInsertFn: null
+      onBeforeAddFn: null,
+      onAfterAddFn: null
     },
     remove: {
       prototype:
@@ -79,7 +80,8 @@ a2lix_lib.sfCollection.init({
         add: {
             label: 'Ajouter',
             // customFn: (...args) => console.log('add', args),
-            // onBeforeInsertFn: (...args) => console.log('add', args),
+            // onBeforeAddFn: (...args) => console.log('add', args),
+            // onAfterAddFn: (...args) => console.log('add', args),
         },
         remove: {
             label: 'Supprimer',

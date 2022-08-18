@@ -13,7 +13,8 @@ a2lix_lib.sfCollection = (() => {
         class: 'btn btn-primary btn-sm mt-2',
         label: 'Add',
         customFn: null,
-        onBeforeInsertFn: null
+        onBeforeAddFn: null,
+        onAfterAddFn: null
       },
       remove: {
         prototype:
@@ -165,13 +166,19 @@ a2lix_lib.sfCollection = (() => {
   }
 
   const addEntry = (collectionElt, entryAddElt, templateContentEntry, cfg) => {
-    cfg.entry.add.onBeforeInsertFn?.(
+    cfg.entry.add.onBeforeAddFn?.(
       collectionElt,
       entryAddElt,
       templateContentEntry
     )
 
     entryAddElt.parentElement.insertBefore(templateContentEntry, entryAddElt)
+
+    cfg.entry.add.onAfterAddFn?.(
+      collectionElt,
+      entryAddElt,
+      templateContentEntry
+    )
   }
 
   const removeEntry = (collectionElt, entryRemoveElt, cfg) => {

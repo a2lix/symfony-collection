@@ -32,30 +32,61 @@ Default configuration:
 
 ```
 a2lix_lib.sfCollection.init({
-    collectionsSelector: 'form div[data-prototype]',
-    manageRemoveEntry: true,
-    lang: {
-      add: 'Add',
-      remove: 'Remove'
+  collectionsSelector: 'form div[data-prototype]',
+  manageRemoveEntry: true,
+  entry: {
+    add: {
+      prototype:
+        '<button class="__class__" data-entry-action="add">__label__</button>',
+      class: 'btn btn-primary btn-sm mt-2',
+      label: 'Add',
+      customFn: null,
+      onBeforeInsertFn: null
+    },
+    remove: {
+      prototype:
+        '<button class="__class__" data-entry-action="remove">__label__</button>',
+      class: 'btn btn-danger btn-sm',
+      label: 'Remove',
+      customFn: null,
+      onAfterRemoveFn: null
     }
+  }
 })
 ```
 
 
 ## Example
 
+
 ```
+////// WITH Symfony Encore: see https://github.com/a2lix/Demo/blob/master/assets/app.js#L14-L16
+
+////// WITHOUT:
+
 <script src="__PATH_TO__a2lix_sf_collection.min.js"></script>
 
 <script>
-// A global initialization on all Symfony Form collection with manageRemoveEntry feature enable
+// A global initialization on all Symfony Form collection with manageRemoveEntry feature enabled (default)
 a2lix_lib.sfCollection.init()
 
 
-// OR a custom initialization with restricted scope of Symfony Form collection with manageRemoveEntry feature disable
+// OR a custom initialization
 a2lix_lib.sfCollection.init({
     collectionsSelector: 'form div[data-a2lix-collection]',
-    manageRemoveEntry: false
+    manageRemoveEntry: false,
+    entry: {
+        add: {
+            label: 'Ajouter',
+            // customFn: (...args) => console.log('add', args),
+            // onBeforeInsertFn: (...args) => console.log('add', args),
+        },
+        remove: {
+            label: 'Supprimer',
+            // customFn: (...args) => console.log('remove', args),
+            // onAfterRemoveFn: (...args) => console.log('remove', args),
+        }
+    }
 })
 </script>
 ```

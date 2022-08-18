@@ -1,6 +1,6 @@
 {
   "name": "@a2lix/symfony-collection",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Manage your Symfony Form collection simply with vanilla JS",
   "main": "src/a2lix_sf_collection.js",
   "repository": {

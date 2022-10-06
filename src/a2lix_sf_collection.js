@@ -112,11 +112,11 @@ a2lix_lib.sfCollection = (() => {
   }
 
   const triggerEntryAction = (evt, cfg) => {
-    evt.preventDefault()
-
     if (!evt.target.hasAttribute('data-entry-action')) {
       return
     }
+
+    evt.preventDefault()
 
     switch (evt.target.getAttribute('data-entry-action')) {
       case 'add':

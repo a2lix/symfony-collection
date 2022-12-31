@@ -1,8 +1,8 @@
 {
   "name": "@a2lix/symfony-collection",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Manage your Symfony Form collection simply with vanilla JS",
-  "main": "src/a2lix_sf_collection.js",
+  "main": "src/a2lix_sf_collection.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/a2lix/symfony-collection.git"
@@ -20,11 +20,10 @@
   "private": false,
   "scripts": {
     "prettier": "prettier src/* --write",
-    "uglifyjs": "uglifyjs src/a2lix_sf_collection.js -o dist/a2lix_sf_collection.min.js",
-    "build": "npm run prettier && npm run uglifyjs"
+    "build": "esbuild src/a2lix_sf_collection.ts --outfile=dist/a2lix_sf_collection.min.js --minify --loader:.ts=ts"
   },
   "devDependencies": {
-    "prettier": "^1.11.1",
-    "uglify-js": "^3.17.0"
+    "esbuild": "^0.16.12",
+    "prettier": "^2.8.1"
   }
 }

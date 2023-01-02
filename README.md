@@ -7,96 +7,76 @@ Manage your Symfony Form collection simply with vanilla JS
 
 ## Install
 
-As first thing you need to pull the package using yarn or npm
-
-```
-yarn add @a2lix/symfony-collection
-```
-or
-```
+```cmd
 npm install @a2lix/symfony-collection
 ```
 
-Then you can either import it in your files using ES6
+
+## Basic use
+
+See Symfony Encore example (https://github.com/a2lix/Demo/blob/master/assets/app.js)
+
+```js
+import a2lix_lib from '@a2lix/symfony-collection/dist/a2lix_sf_collection.min'
+
+a2lix_lib.sfCollection.init()
 ```
-import a2lix_lib from '@a2lix/symfony-collection/src/a2lix_sf_collection';
-```
 
-or symlink/copy/move it in a folder and reference it directly in a `script` tag
+## Advanced use
 
-## How to
+Default configuration https://github.com/a2lix/symfony-collection/blob/master/src/a2lix_sf_collection.ts#L3-L45
+can be customized globally in javascript during init
 
-After you loaded the dist version of **a2lix_sf_collection.min.js** file or imported through ES6 method, init a2lix_lib.sfCollection, optionnaly with custom configuration.
 
-Default configuration:
-
-```
+```js
 a2lix_lib.sfCollection.init({
-  collectionsSelector: 'form div[data-prototype]',
-  manageRemoveEntry: true,
   entry: {
     add: {
-      prototype:
-        '<button class="__class__" data-entry-action="add">__label__</button>',
-      class: 'btn btn-primary btn-sm mt-2',
-      label: 'Add',
-      customFn: null,
-      onBeforeFn: null,
-      onAfterFn: null
+        label: 'Add entry'
     },
-    remove: {
-      prototype:
-        '<button class="__class__" data-entry-action="remove">__label__</button>',
-      class: 'btn btn-danger btn-sm',
-      label: 'Remove',
-      customFn: null,
-      onAfterFn: null
-    }
-  }
-})
+}}
 ```
 
+Or/And more precisely on each collection by using DOM attributes:
 
-## Example
-
-
+```php
+  ...
+    ->add('categories', CollectionType::class, [
+        ...
+        'attr' => [
+          'data-entry-add-label' => 'Add Category',
+        ],
+    ])
 ```
-////// WITH Symfony Encore: see https://github.com/a2lix/Demo/blob/master/assets/app.js#L14-L16
 
-////// WITHOUT:
+### Nested collection(s)
 
-<script src="__PATH_TO__a2lix_sf_collection.min.js"></script>
+As advised by SF in this case, you must override the default 'prototype_name' option (https://symfony.com/doc/current/reference/forms/types/collection.html#prototype-name) of the nested collection with a custom name. Then, set this same custom name in a 'data-prototype-name' DOM attribute.
 
-<script>
-// A global initialization on all Symfony Form collection with manageRemoveEntry feature enabled (default)
-a2lix_lib.sfCollection.init()
+Example of a 'tags' collection nested in a 'categories' collection:
 
 
-// OR a custom initialization
-a2lix_lib.sfCollection.init({
-    collectionsSelector: 'form div[data-a2lix-collection]',
-    manageRemoveEntry: false,
-    entry: {
-        add: {
-            label: 'Ajouter',
-            // customFn: (...args) => console.log('add', args),
-            // onBeforeFn: (...args) => console.log('add', args),
-            // onAfterFn: (...args) => console.log('add', args),
-        },
-        remove: {
-            label: 'Supprimer',
-            // customFn: (...args) => console.log('remove', args),
-            // onAfterFn: (...args) => console.log('remove', args),
-        }
-    }
-})
-</script>
+```php
+  ...
+    ->add('tags', CollectionType::class, [
+        'entry_type' => TextType::class,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'delete_empty' => true,
+        'by_reference' => false,
+        'prototype_name' => '__name2__',  // Advised by Symfony
+        'attr' => [
+            'data-prototype-name' => '__name2__'  // Required by a2lix_sf_collection
+        ],
+        'entry_options' => [
+            'label' => false,
+        ],
 ```
 
 
 ## Contribute help
 
-```
+```cmd
 docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/src/app -w /usr/src/app node:alpine npm install
 docker run -it --rm --user $(id -u):$(id -g) --name a2lix_nodejs -v "$PWD":/usr/src/app -w /usr/src/app node:alpine npm run build
 

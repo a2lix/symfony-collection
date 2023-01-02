@@ -295,7 +295,7 @@ a2lix_lib.sfCollection = (() => {
 
     entryAddElt.parentElement!.insertBefore(templateContentEntry, entryAddElt)
     proceedCollectionElts(
-      (entryAddElt.previousSibling as Element).querySelectorAll(
+      entryAddElt.previousElementSibling!.querySelectorAll(
         cfg.collectionsSelector
       ),
       cfg

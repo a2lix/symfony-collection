@@ -77,7 +77,7 @@ a2lix_lib.sfCollection = (() => {
 
   const init = (config = CONFIG_DEFAULT) => {
     if (!('content' in document.createElement('template'))) {
-      console.error('HTML template will not working...')
+      console.error('The HTML <template> element is not supported')
       return
     }
 

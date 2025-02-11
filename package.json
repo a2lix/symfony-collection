@@ -23,7 +23,7 @@
     "build": "esbuild src/a2lix_sf_collection.ts --outfile=dist/a2lix_sf_collection.min.js --minify --loader:.ts=ts"
   },
   "devDependencies": {
-    "esbuild": "^0.16.12",
+    "esbuild": "^0.25.0",
     "prettier": "^2.8.1"
   }
 }
